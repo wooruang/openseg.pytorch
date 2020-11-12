@@ -25,18 +25,22 @@ class LogVisualizer(object):
 
             for line in file_stream.readlines():
                 if 'Iteration' in line:
-                    m = re.match(r'.*Iteration:(.*)Learning.*', line)
+                    m = re.match(r'.*Iteration:(.*)\tTime.*', line)
+                    print(m)
+                    print(m.group(1))
                     iter = int(m.group(1))
                     train_ax.append(iter)
                     test_mark = iter
 
-                elif 'TrainLoss' in line:
-                    m = re.match(r'.*TrainLoss = (.*)', line)
+                elif 'Loss = ' in line:
+                    m = re.match(r'.*Loss = (.*) \(ave.*', line)
+                    print(m)
+                    print(m.group(1))
                     loss = float(m.group(1))
                     train_ay.append(loss)
 
-                elif 'TestLoss' in line:
-                    m = re.match(r'.*TestLoss = (.*)', line)
+                elif 'Test Time' in line:
+                    m = re.match(r'.*Loss (.*)', line)
                     loss = float(m.group(1))
                     test_ax.append(test_mark)
                     test_ay.append(loss)
@@ -51,32 +55,45 @@ class LogVisualizer(object):
         plt.plot(train_ax, train_ay, label='Train Loss')
         plt.plot(test_ax, test_ay, label='Test Loss')
         plt.legend()
-        plt.show()
+        plt.savefig('loss.png')
+        #plt.show()
+        plt.clf()
 
     def vis_acc(self, log_file):
         with open(log_file, 'r') as file_stream:
             acc_ax = list()
             acc_ay = list()
+            iou_ax = list()
+            iou_ay = list()
             test_mark = 0
 
             for line in file_stream.readlines():
-                if 'Iteration' in line and 'Train' in line:
-                    m = re.match(r'.*Iteration:(.*)Learning.*', line)
+                if 'Iteration' in line:
+                    m = re.match(r'.*Iteration:(.*)\tTime.*', line)
                     iter = int(m.group(1))
                     test_mark = iter
 
-                if 'Accuracy' in line:
-                    m = re.match(r'.*Accuracy = (.*)', line)
+                if 'ACC' in line:
+                    m = re.match(r'.*ACC: (.*)', line)
                     loss = float(m.group(1))
                     acc_ax.append(test_mark)
                     acc_ay.append(loss)
+
+                if 'IOU' in line:
+                    m = re.match(r'.*IOU: (.*)', line)
+                    loss = float(m.group(1))
+                    iou_ax.append(test_mark)
+                    iou_ay.append(loss)
 
                 else:
                     continue
 
         plt.plot(acc_ax, acc_ay, label='Acc')
+        plt.plot(iou_ax, iou_ay, label='IOU')
         plt.legend()
-        plt.show()
+        plt.savefig('acc.png')
+        plt.clf()
+        # plt.show()
 
 
 if __name__ == "__main__":
@@ -85,4 +102,7 @@ if __name__ == "__main__":
     #    exit(0)
 
     log_visualizer = LogVisualizer()
-    log_visualizer.vis_loss('../../log/cls/fc_flower_cls.log')
+    #@log_visualizer.vis_loss('../../log/cls/fc_flower_cls.log')
+    log_visualizer.vis_loss('./log/hrnet_w48_ocr_hrnet48_ohem_1.log')
+    log_visualizer = LogVisualizer()
+    log_visualizer.vis_acc('./log/hrnet_w48_ocr_hrnet48_ohem_1.log')
