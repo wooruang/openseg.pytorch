@@ -143,3 +143,6 @@ def get_pascal_voc_colors():
                 [0, 64, 128],
             ]
         )
+
+if __name__ == '__main__':
+    print(np.array(get_ade_colors()).reshape(-1, 3))

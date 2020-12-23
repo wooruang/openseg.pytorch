@@ -103,6 +103,7 @@ if __name__ == "__main__":
 
     log_visualizer = LogVisualizer()
     #@log_visualizer.vis_loss('../../log/cls/fc_flower_cls.log')
-    log_visualizer.vis_loss('./log/hrnet_w48_ocr_hrnet48_ohem_1.log')
+    log_visualizer.vis_loss('./log/ade20k/hrnet_w48_ocr_hrnet48_ohem_5.log')
     log_visualizer = LogVisualizer()
-    log_visualizer.vis_acc('./log/hrnet_w48_ocr_hrnet48_ohem_1.log')
+    log_visualizer.vis_acc('./log/ade20k/hrnet_w48_ocr_hrnet48_ohem_5.log')
+
